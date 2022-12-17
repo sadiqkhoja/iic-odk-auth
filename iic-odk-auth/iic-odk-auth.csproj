@@ -5,8 +5,30 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>iic_odk_auth</RootNamespace>
+    <UserSecretsId>0027f13e-1d11-44e9-ac3f-0db8bed34644</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+  <ItemGroup>
+    <None Remove="Service\OdkService\" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="Microsoft.Identity.Web" />
+    <None Remove="Microsoft.Identity.Web.UI" />
+    <None Remove="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\OdkService\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.10" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" Version="6.0.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="secrets.sample.json" />
+    <Content Remove="wwwroot\" />
+  </ItemGroup>
 </Project>
