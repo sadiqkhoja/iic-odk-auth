@@ -19,12 +19,12 @@ public class AuthController : Controller
     private readonly ILogger<AuthController> _logger;
     private readonly IOdkService odkService;
     private readonly String salt;
-    private readonly Configuration _config;
+    private readonly IConfiguration _config;
 
     public AuthController(ILogger<AuthController> logger, IOdkService odkService, IConfiguration config)
     {
         salt = config.GetValue<String>("PasswordSalt")!;
-	_config = config;
+	    _config = config;
         this.odkService = odkService;
         _logger = logger;
     }
