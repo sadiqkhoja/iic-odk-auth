@@ -19,10 +19,12 @@ public class AuthController : Controller
     private readonly ILogger<AuthController> _logger;
     private readonly IOdkService odkService;
     private readonly String salt;
+    private readonly Configuration _config;
 
     public AuthController(ILogger<AuthController> logger, IOdkService odkService, IConfiguration config)
     {
         salt = config.GetValue<String>("PasswordSalt")!;
+	_config = config;
         this.odkService = odkService;
         _logger = logger;
     }
@@ -35,13 +37,21 @@ public class AuthController : Controller
         var user = new User()
         {
             Email = User.FindFirstValue("emails").ToLower(),
-            Name = User.FindFirstValue("name"),
+            Name = $"{User.FindFirstValue("given_name")} {User.FindFirstValue("family_name")}",
             AzureObjectId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier").ToLower(),            
         };
 
         user.Password = Hash(user.Email + user.AzureObjectId + salt);
 
         user.OdkId = await odkService.GetUserOdkIdAsync(user);
+
+	var whitelistEmails = _config.GetSection("WhiteListEmails").Get<string[]>();
+        var whiteListEmail = whitelistEmails?.Where(x => string.Equals(x, user.Email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+        if (whiteListEmail == null)
+        {
+            return Redirect(@"https://ikey.iicanada.ca");
+        }
 
         if(user.OdkId == default)
         {
