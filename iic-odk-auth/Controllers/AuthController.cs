@@ -37,7 +37,7 @@ public class AuthController : Controller
         var user = new User()
         {
             Email = User.FindFirstValue("emails").ToLower(),
-            Name = $"{User.FindFirstValue("given_name")} {User.FindFirstValue("family_name")} ({Email})",
+            Name = $"{User.FindFirstValue("given_name")} {User.FindFirstValue("family_name")} ({User.FindFirstValue("emails").ToLower()})",
             AzureObjectId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier").ToLower(),            
         };
 
