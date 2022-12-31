@@ -37,7 +37,7 @@ public class AuthController : Controller
         var user = new User()
         {
             Email = User.FindFirstValue("emails").ToLower(),
-            Name = $"{User.FindFirstValue("given_name")} {User.FindFirstValue("family_name")}",
+            Name = $"{User.FindFirstValue("given_name")} {User.FindFirstValue("family_name")} ({Email})",
             AzureObjectId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier").ToLower(),            
         };
 
@@ -45,13 +45,13 @@ public class AuthController : Controller
 
         user.OdkId = await odkService.GetUserOdkIdAsync(user);
 
-	var whitelistEmails = _config.GetSection("WhiteListEmails").Get<string[]>();
-        var whiteListEmail = whitelistEmails?.Where(x => string.Equals(x, user.Email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+	    // var whitelistEmails = _config.GetSection("WhiteListEmails").Get<string[]>();
+        // var whiteListEmail = whitelistEmails?.Where(x => string.Equals(x, user.Email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
-        if (whiteListEmail == null)
-        {
-            return Redirect(@"https://ikey.iicanada.ca");
-        }
+        // if (whiteListEmail == null)
+        // {
+        //     return Redirect(@"https://ikey.iicanada.ca");
+        // }
 
         if(user.OdkId == default)
         {
