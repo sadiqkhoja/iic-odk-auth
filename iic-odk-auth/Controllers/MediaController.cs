@@ -24,7 +24,7 @@ namespace iic_odk_auth.Controllers
         {
             return new ContentResult()
             {
-                Content = $"<root><name>{User.FindFirstValue("name")}</name></root>",
+                Content = $"<root><name>{User.FindFirstValue(ClaimTypes.GivenName)} {User.FindFirstValue(ClaimTypes.Surname)} ({User.FindFirstValue("emails").ToLower()})</name></root>",
                 ContentType = "application/xml",
                 StatusCode = 200
             };            
@@ -39,11 +39,11 @@ namespace iic_odk_auth.Controllers
 <root>
     <item>       
         <name>1</name>
-        <label>Sadiq Khoja</label>
+        <label>Dont fill this Survey</label>
     </item>
     <item>        
         <name>2</name>
-        <label>Salima Sayani</label>
+        <label>Dont fill this Survey 2</label>
     </item>
 </root>
 ",
