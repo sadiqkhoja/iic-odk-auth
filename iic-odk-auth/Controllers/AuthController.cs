@@ -6,10 +6,6 @@ using iic_odk_auth.Services.OdkService;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
-using System.Runtime.ConstrainedExecution;
-using Microsoft.Extensions.Primitives;
-using System.Net;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace iic_odk_auth.Controllers;
 
@@ -37,7 +33,7 @@ public class AuthController : Controller
         var user = new User()
         {
             Email = User.FindFirstValue("emails").ToLower(),
-            Name = $"{User.FindFirstValue("given_name")} {User.FindFirstValue("family_name")} ({User.FindFirstValue("emails").ToLower()})",
+            Name = $"{User.FindFirstValue(ClaimTypes.GivenName)} {User.FindFirstValue(ClaimTypes.Surname)} ({User.FindFirstValue("emails").ToLower()})",
             AzureObjectId = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier").ToLower(),            
         };
 
