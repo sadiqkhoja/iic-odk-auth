@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using iic_odk_auth.Models;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
@@ -106,7 +107,9 @@ namespace iic_odk_auth.Services.OdkService
 
             var cookies = response.Headers.GetValues("Set-Cookie");
 
-            return new StringValues(cookies.ToArray());
+            var expiry = new Regex(@"Expires[^;]*; ");
+
+            return new StringValues(cookies.Select(c => expiry.Replace(c, "")).ToArray());
         }
 
     }
