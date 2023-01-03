@@ -107,9 +107,34 @@ namespace iic_odk_auth.Services.OdkService
 
             var cookies = response.Headers.GetValues("Set-Cookie");
 
-            var expiry = new Regex(@"Expires[^;]*; ");
+            return new StringValues(cookies.ToArray());
+        }
 
-            return new StringValues(cookies.Select(c => expiry.Replace(c, "")).ToArray());
+        public async Task<User> GetCurrentUserAsync(string cookie)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{odkHost}/v1/users/current");
+
+            request.Headers.Add("Cookie", cookie);
+
+            var response = await httpClient.SendAsync(request);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                dynamic responseJson = JsonConvert.DeserializeObject(responseBody);
+
+                var displayName = responseJson.displayName.Value;
+
+                return new User()
+                {
+                    Name = responseJson.displayName.Value,
+                    Email = responseJson.email.Value,
+                    OdkId = responseJson.id.Value
+                };                
+            }
+
+            return default;
         }
 
     }

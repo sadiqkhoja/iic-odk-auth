@@ -7,7 +7,7 @@ namespace iic_odk_auth.Models
         public String Password { get; set; }
         public String Name { get; set; }
         public String AzureObjectId { get; set; }
-        public int OdkId { get; set; }
+        public long OdkId { get; set; }
     }
 }
 

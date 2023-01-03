@@ -2,17 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using iic_odk_auth.Services.OdkService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace iic_odk_auth.Controllers
 {
-    [Authorize]
     public class MediaController : Controller
     {
+        private readonly ILogger<MediaController> _logger;
+        private readonly IOdkService odkService;
+
+        public MediaController(ILogger<MediaController> logger, IOdkService odkService)
+        {
+            _logger = logger;
+            this.odkService = odkService;
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -20,11 +31,17 @@ namespace iic_odk_auth.Controllers
         }
 
         // TODO [High] add other attributes of the user in the response
-        public IActionResult Profile()
+        public async Task<IActionResult> ProfileAsync()
         {
+            var cookie = Request.Headers["Cookie"].First();
+
+            _logger.LogInformation("cookie" + cookie);
+
+            var user = await odkService.GetCurrentUserAsync(cookie);
+
             return new ContentResult()
             {
-                Content = $"<root><name>{User.FindFirstValue(ClaimTypes.GivenName)} {User.FindFirstValue(ClaimTypes.Surname)} ({User.FindFirstValue("emails").ToLower()})</name></root>",
+                Content = $"<root><name>{user.Name}</name></root>",
                 ContentType = "application/xml",
                 StatusCode = 200
             };            

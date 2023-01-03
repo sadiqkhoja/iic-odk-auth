@@ -9,5 +9,6 @@ namespace iic_odk_auth.Services.OdkService
         Task<int> CreateUserAsync(User user);
         Task<int> GetUserOdkIdAsync(User user);
         Task<StringValues> Login(User user);
+        Task<User> GetCurrentUserAsync(string cookie);
     }
 }
